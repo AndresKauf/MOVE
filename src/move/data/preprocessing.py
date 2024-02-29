@@ -74,9 +74,11 @@ def scale(x: np.ndarray) -> tuple[FloatArray, BoolArray]:
         Tuple containing (1) scaled output and (2) a 1D mask marking columns
         (i.e., features) without zero variance
     """
-    logx = np.log2(x + 1)
-    mask_1d = ~np.isclose(np.nanstd(logx, axis=0), 0.0)
-    scaled_x = standardize(logx[:, mask_1d], axis=0)
+    #Andres modyfication: I already feed the data log transformed, so it doesn't make sense to do it again
+    #because it makes many feature to be NaN 
+    #logx = np.log2(x + 1)
+    mask_1d = ~np.isclose(np.nanstd(x, axis=0), 0.0)
+    scaled_x = standardize(x[:, mask_1d], axis=0)
     scaled_x[np.isnan(scaled_x)] = 0
     return scaled_x, mask_1d
 
@@ -99,3 +101,4 @@ def feature_stats(x: ArrayLike) -> tuple[FloatArray, FloatArray, FloatArray]:
     maximum = np.nanmax(x, axis=0)
     std = np.nanstd(x, axis=0)
     return minimum, maximum, std
+ 
